@@ -1,0 +1,37 @@
+\documentclass[12pt,a4paper,twocolumn]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{xeCJK}
+\usepackage{fontspec}
+\setCJKmainfont{標楷體}
+\usepackage{amsmath}
+\usepackage{enumitem}
+\usepackage{parskip}
+\usepackage{fancyhdr}
+
+% 題號樣式
+\newlist{problems}{enumerate}{1}
+\setlist[problems]{label*=(\arabic*), left=0pt, align=left, itemsep=4em}
+
+% 每欄間距
+\setlength{\columnsep}{1cm}
+
+% 頁首、頁尾
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{姓名：\underline{\hspace{4cm}}}
+\fancyhead[C]{日期：\underline{\hspace{3cm}}}
+\fancyhead[R]{數學練習卷}
+\fancyfoot[C]{第~\thepage~頁}
+
+\raggedbottom
+
+\begin{document}
+
+% QUESTIONS_HERE
+
+\clearpage
+\newpage
+
+% ANSWERS_HERE
+
+\end{document}
