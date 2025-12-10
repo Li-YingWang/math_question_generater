@@ -1,22 +1,33 @@
-from plugins.general import generate_nums, format_latex
+from core.utils import format_latex, NumberGenerator
 from core.base_plugin import BasePlugin
 
 class MultiplicationPlugin(BasePlugin):
-    def __init__(self, amplitude=100):
-        self.amplitude = amplitude
+    def __init__(self):
+        pass
 
     def get_name(self):
-        return "整數乘法(國中)"
+        return "乘法(國中)"
 
     def generate(self, count):
+        number_format = getattr(self, "number_format", "integer")
+        amplitude = getattr(self, "amplitude", 100)
         returns = []
         for _ in range(count):
-            a, b = generate_nums(2, self.amplitude)
+            num_gen = NumberGenerator(
+                number_format=number_format,
+                amplitude=amplitude,
+                decimal_places=2,
+                allow_negative=True,
+                fraction_simplify=True
+            )
+            a, a_text = num_gen.generate()
+            b, b_text = num_gen.generate()
             while (a >= 0) and (b >= 0):
-                a, b = generate_nums(2, self.amplitude)
+                a, a_text = num_gen.generate()
+                b, b_text = num_gen.generate()
 
-            str_a = f"({a})" if a < 0 else str(a)
-            str_b = f"({b})" if b < 0 else str(b)
+            str_a = f"({a_text})" if a < 0 else a_text
+            str_b = f"({b_text})" if b < 0 else b_text
 
             question = str_a + " \\times " + str_b
             answer = str(a * b)
