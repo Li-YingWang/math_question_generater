@@ -14,13 +14,15 @@ class NumberGenerator:
         amplitude=100,
         decimal_places=2,
         fraction_simplify=True,
-        allow_negative=True
+        allow_negative=True,
+        allow_zero=True
     ):
         self.number_format = number_format
         self.amplitude = amplitude
         self.decimal_places = decimal_places
         self.fraction_simplify = fraction_simplify
         self.allow_negative = allow_negative
+        self.allow_zero = allow_zero
 
     def rand_int(self):
         a, b = -self.amplitude, self.amplitude
@@ -54,7 +56,12 @@ class NumberGenerator:
 
         frac = Fraction(numerator, denominator)
 
-        text = f"\\frac{{{frac.numerator}}}{{{frac.denominator}}}"
+        if frac.denominator == 1:
+            return frac.numerator, str(frac.numerator)
+        elif frac < 0:
+            text = f"-\\frac{{{abs(frac.numerator)}}}{{{abs(frac.denominator)}}}"
+        else:
+            text = f"\\frac{{{frac.numerator}}}{{{frac.denominator}}}"
 
         return frac, text
 

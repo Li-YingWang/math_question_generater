@@ -36,7 +36,12 @@ class SubstractionPlugin(BasePlugin):
                 answer = f"{round(a - b, 2):.2f}"
             elif number_format == "fraction":
                 ans = Fraction(a - b)
-                answer = f"\\frac{{{ans.numerator}}}{{{ans.denominator}}}" if ans.denominator != 1 else f"{ans.numerator}"
+                if ans.denominator == 1:
+                    answer = f"{ans.numerator}"
+                elif ans.numerator < 0:
+                    answer = f"-\\frac{{{abs(ans.numerator)}}}{{{ans.denominator}}}"
+                else:
+                    answer = f"\\frac{{{ans.numerator}}}{{{ans.denominator}}}"
             else:
                 answer = str(a - b)
             returns.append((format_latex(question), format_latex(answer)))

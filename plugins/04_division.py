@@ -31,10 +31,17 @@ class DivisionPlugin(BasePlugin):
             str_b = f"({b_text})" if b < 0 else b_text
 
             question = str_a + " \\div " + str_b
-            if a % b == 0:
-                answer = str(a // b)
+            if number_format == "decimal":
+                ans_num = round(a * 100)
+                ans_den = round(b * 100)
+                frac = Fraction(ans_num, ans_den)
             else:
                 frac = Fraction(a, b)
+            if frac.denominator == 1:
+                answer = f"{frac.numerator}"
+            elif frac.numerator < 0:
+                answer = f"-\\frac{{{abs(frac.numerator)}}}{{{frac.denominator}}}"
+            else:
                 answer = f"\\frac{{{frac.numerator}}}{{{frac.denominator}}}"
             returns.append((format_latex(question), format_latex(answer)))
         return returns

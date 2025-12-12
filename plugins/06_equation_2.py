@@ -28,10 +28,18 @@ class Equation2Plugin(BasePlugin):
                 b, b_text = num_gen.generate()
 
             question = f"{a_text}x={b_text}"
-            answer = f"{b // a}" if b % a == 0 else None
-            if answer is None:
-                frac = Fraction(b, a)
-                answer = f"\\frac{{{frac.numerator}}}{{{frac.denominator}}}"
+            if number_format == "decimal":
+                ans_num = round(100 * b)
+                ans_dec = round(100 * a)
+                ans = Fraction(ans_num, ans_dec)
+            else:
+                ans = Fraction(b, a)
+            if ans.denominator == 1:
+                answer = f"{ans.numerator}"
+            elif ans.numerator < 0:
+                answer = f"-\\frac{{{abs(ans.numerator)}}}{{{ans.denominator}}}"
+            else:
+                answer = f"\\frac{{{ans.numerator}}}{{{ans.denominator}}}"
             returns.append((format_latex(question), format_latex(answer)))
         return returns
 

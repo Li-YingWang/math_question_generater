@@ -27,7 +27,19 @@ class Equation1Plugin(BasePlugin):
                 b, b_text = num_gen.generate()
 
             question = f"x+{a_text}={b_text}" if a > 0 else f"x{a_text}={b_text}"
-            answer = f"{b - a}"
+            if number_format == "fraction":
+                from fractions import Fraction
+                frac = Fraction(b - a)
+                if frac.denominator == 1:
+                    answer = str(frac.numerator)
+                elif frac.numerator < 0:
+                    answer = f"-\\frac{{{abs(frac.numerator)}}}{{{frac.denominator}}}"
+                else:
+                    answer = f"\\frac{{{frac.numerator}}}{{{frac.denominator}}}"
+            elif number_format == "decimal":
+                answer = f"{round(b - a, 2):.2f}"
+            else:
+                answer = str(b - a)
             returns.append((format_latex(question), format_latex(answer)))
         return returns
 

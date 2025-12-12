@@ -30,10 +30,18 @@ class Equation3Plugin(BasePlugin):
                 c, c_text = num_gen.generate()
 
             question = f"{a_text}x+{b_text}={c_text}" if b > 0 else f"{a_text}x{b_text}={c_text}"
-            answer = f"{(c - b) // a}" if (c - b) % a == 0 else None
-            if answer is None:
-                frac = Fraction(c - b, a)
-                answer = f"\\frac{{{frac.numerator}}}{{{frac.denominator}}}"
+            if number_format == "decimal":
+                ans_num = round(100 * (c - b))
+                ans_dec = round(100 * a)
+                ans = Fraction(ans_num, ans_dec)
+            else:
+                ans = Fraction((c - b), a)
+            if ans.denominator == 1:
+                answer = f"{ans.numerator}"
+            elif ans.numerator < 0:
+                answer = f"-\\frac{{{abs(ans.numerator)}}}{{{ans.denominator}}}"
+            else:
+                answer = f"\\frac{{{ans.numerator}}}{{{ans.denominator}}}"
             returns.append((format_latex(question), format_latex(answer)))
         return returns
 

@@ -17,7 +17,8 @@ class AdditionPlugin(BasePlugin):
             amplitude=amplitude,
             decimal_places=2,
             allow_negative=True,
-            fraction_simplify=True
+            fraction_simplify=True,
+            allow_zero=True
         )
 
         returns = []

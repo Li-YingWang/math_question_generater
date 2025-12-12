@@ -37,10 +37,19 @@ class Equation4Plugin(BasePlugin):
             d1 = f"+{d_text}" if d > 0 else d_text
 
             question = f"{x1}{b1}={x2}{d1}"
-            answer = f"{(d - b) // (a - c)}" if (d - b) % (a - c) == 0 else None
-            if answer is None:
-                frac = Fraction(d - b, a - c)
-                answer = f"\\frac{{{frac.numerator}}}{{{frac.denominator}}}"
+            if number_format == "decimal":
+                ans_num = round(100 * (d - b))
+                ans_dec = round(100 * (c - a))
+                ans = Fraction(ans_num, ans_dec)
+            else:
+                ans = Fraction(d - b, c - a)
+                
+            if ans.denominator == 1:
+                answer = f"{ans.numerator}"
+            elif ans.numerator < 0:
+                answer = f"-\\frac{{{abs(ans.numerator)}}}{{{ans.denominator}}}"
+            else:
+                answer = f"\\frac{{{ans.numerator}}}{{{ans.denominator}}}"
             returns.append((format_latex(question), format_latex(answer)))
         return returns
 

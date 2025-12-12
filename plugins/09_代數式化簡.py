@@ -1,5 +1,6 @@
 from core.utils import format_latex, NumberGenerator
 from core.base_plugin import BasePlugin
+from fractions import Fraction
 
 class AlgebraicSimplificationPlugin(BasePlugin):
     def __init__(self):
@@ -57,12 +58,25 @@ class AlgebraicSimplificationPlugin(BasePlugin):
             n = "+" if h == 1 else "-" if h == -1 else f"+{h_text}" if h > 0 else h_text
             question = f"{m}({x1}{y1}{c1}){n}({x2}{y2}{c2})"
 
-            coef_x = g * a + h * d
-            coef_y = g * b + h * e
-            coef_c = g * c + h * f
-            ans_x = "" if coef_x == 0 else "x" if coef_x == 1 else "-x" if coef_x == -1 else f"{coef_x}x" if coef_x > 0 else f"{coef_x}x"
-            ans_y = "" if coef_y == 0 else "+y" if coef_y == 1 else "-y" if coef_y == -1 else f"+{coef_y}y" if (coef_y > 0) and (ans_x != "") else f"{coef_y}y"
-            ans_c = "" if coef_c == 0 else f"+{coef_c}" if (coef_c > 0) and (ans_x + ans_y != "") else str(coef_c)
+            coef_x = Fraction(g * a + h * d)
+            coef_y = Fraction(g * b + h * e)
+            coef_c = Fraction(g * c + h * f)
+
+            if number_format == "integer":
+                coef_x_text = coef_x.numerator
+                coef_y_text = coef_y.numerator
+                coef_c_text = coef_c.numerator
+            elif number_format == "fraction":
+                coef_x_text = coef_x.numerator if coef_x.denominator == 1 else f"-\\frac{{{abs(coef_x.numerator)}}}{{{coef_x.denominator}}}" if coef_x < 0 else f"\\frac{{{coef_x.numerator}}}{{{coef_x.denominator}}}"
+                coef_y_text = coef_y.numerator if coef_y.denominator == 1 else f"-\\frac{{{abs(coef_y.numerator)}}}{{{coef_y.denominator}}}" if coef_y < 0 else f"\\frac{{{coef_y.numerator}}}{{{coef_y.denominator}}}"
+                coef_c_text = coef_c.numerator if coef_c.denominator == 1 else f"-\\frac{{{abs(coef_c.numerator)}}}{{{coef_c.denominator}}}" if coef_c < 0 else f"\\frac{{{coef_c.numerator}}}{{{coef_c.denominator}}}"
+            else:
+                coef_x_text = round(float(coef_x), 4)
+                coef_y_text = round(float(coef_y), 4)
+                coef_c_text = round(float(coef_c), 4)
+            ans_x = "" if coef_x == 0 else "x" if coef_x == 1 else "-x" if coef_x == -1 else f"{coef_x_text}x" if coef_x > 0 else f"{coef_x_text}x"
+            ans_y = "" if coef_y == 0 else "+y" if coef_y == 1 else "-y" if coef_y == -1 else f"+{coef_y_text}y" if (coef_y > 0) and (ans_x != "") else f"{coef_y_text}y"
+            ans_c = "" if coef_c == 0 else f"+{coef_c_text}" if (coef_c > 0) and (ans_x + ans_y != "") else coef_c_text
             answer = f"{ans_x}{ans_y}{ans_c}"
             answer = "0" if answer == "" else answer
 

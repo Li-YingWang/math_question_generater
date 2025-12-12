@@ -1,6 +1,6 @@
 class LatexBuilder:
 
-    def __init__(self, template_path: str, output_path: str, max_questions_per_page: int = 10):
+    def __init__(self, template_path: str, output_path: str, max_questions_per_page: int = 20):
         self.template_path = template_path
         self.output_path = output_path
         self.max_questions_per_page = max_questions_per_page  # 每頁顯示的題目數量

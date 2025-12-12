@@ -30,7 +30,21 @@ class MultiplicationPlugin(BasePlugin):
             str_b = f"({b_text})" if b < 0 else b_text
 
             question = str_a + " \\times " + str_b
-            answer = str(a * b)
+
+            ans = a * b
+            if number_format == "decimal":
+                answer = f"{round(ans, 4):.4f}"
+            elif number_format == "fraction":
+                from fractions import Fraction
+                frac = Fraction(ans)
+                if frac.denominator == 1:
+                    answer = str(frac.numerator)
+                elif frac.numerator < 0:
+                    answer = f"-\\frac{{{abs(frac.numerator)}}}{{{frac.denominator}}}"
+                else:
+                    answer = f"\\frac{{{frac.numerator}}}{{{frac.denominator}}}"
+            else:
+                answer = str(a * b)
             returns.append((format_latex(question), format_latex(answer)))
         return returns
 

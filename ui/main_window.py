@@ -133,7 +133,7 @@ class MainWindow(QWidget):
         template_path = "templates/template.tex"
 
         # 依照每頁最多 10 題分割（與 LatexBuilder 的預期資料結構相容）
-        chunk_size = 10
+        chunk_size = 20
         pages = [self.qa_pairs[i:i+chunk_size] for i in range(0, len(self.qa_pairs), chunk_size)]
 
         latex_builder = LatexBuilder(template_path, output_path)

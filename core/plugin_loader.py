@@ -9,7 +9,13 @@ class PluginManager:
     def __init__(self, plugin_dir=None):
         if getattr(sys, 'frozen', False):
             # 當以 PyInstaller 打包為 single-file 時，資源會解壓到 sys._MEIPASS
-            base_path = getattr(sys, '_MEIPASS', os.path.dirname(sys.executable))
+            # 優先使用 exe 旁可修改的 plugins 資料夾（支援熱插拔），若不存在再回退到 sys._MEIPASS
+            exe_dir = os.path.dirname(sys.executable)
+            external_plugins = os.path.join(exe_dir, "plugins")
+            if os.path.exists(external_plugins):
+                base_path = exe_dir
+            else:
+                base_path = getattr(sys, '_MEIPASS', exe_dir)
         else:
             # 非 frozen 時，專案根目錄為 core/ 的上層目錄
             base_path = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
@@ -20,7 +26,17 @@ class PluginManager:
             sys.path.insert(0, core_path)
 
         if plugin_dir is None:
-            plugin_dir = os.path.join(base_path, "plugins")
+            # 若為 frozen 且 exe 旁存在 plugins 資料夾，使用該資料夾以支援熱插拔；
+            # 否則使用 base_path 下的 plugins（對開發環境或 bundle 中的資源適用）
+            candidate = os.path.join(base_path, "plugins")
+            if getattr(sys, 'frozen', False):
+                exe_plugins = os.path.join(os.path.dirname(sys.executable), "plugins")
+                if os.path.exists(exe_plugins):
+                    plugin_dir = exe_plugins
+                else:
+                    plugin_dir = candidate
+            else:
+                plugin_dir = candidate
 
         self.plugin_dir = os.path.abspath(plugin_dir)
         self.plugins = []
