@@ -29,7 +29,7 @@ class Equation3Plugin(BasePlugin):
                 b, b_text = num_gen.generate()
                 c, c_text = num_gen.generate()
 
-            question = f"{a_text}x+{b_text}={c_text}" if b > 0 else f"{a_text}x{b_text}={c_text}"
+            question = f"{"" if a == 1 else "-" if a == -1 else f"{a_text}"}x+{b_text}={c_text}" if b > 0 else f"{a_text}x{b_text}={c_text}"
             if number_format == "decimal":
                 ans_num = round(100 * (c - b))
                 ans_dec = round(100 * a)
